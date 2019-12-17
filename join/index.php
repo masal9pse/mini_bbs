@@ -11,6 +11,9 @@ if(strlen($_POST['password']) < 4 ){
 if($_POST['password'] === ''){
 	$error['password'] = "blank";
 }
+
+header('Location:check.php');
+exit();
 ?>
 <!DOCTYPE html>
 <html lang="ja">
