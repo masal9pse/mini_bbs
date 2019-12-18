@@ -1,3 +1,10 @@
+<?php
+session_start();
+if(!isset($_SESSION['join'])){
+  header('Location:index.php');
+  exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -20,6 +27,7 @@
 	<input type="hidden" name="action" value="submit" />
 	<dl>
 		<dt>ニックネーム</dt>
+		<?php print(htmlspecialchars($_SESSION['join']['name'],ENT_QUOTES)); ?>
 		<dd>
         </dd>
 		<dt>メールアドレス</dt>
