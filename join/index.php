@@ -19,7 +19,11 @@ $error['name'] = "blank";
 	exit();
  }
 }
+if($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])){
+	$_POST = $_SESSION['join'];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
