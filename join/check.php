@@ -31,6 +31,7 @@ if(!isset($_SESSION['join'])){
 		<dd>
         </dd>
 		<dt>メールアドレス</dt>
+		<?php print(htmlspecialchars($_SESSION['join']['email'],ENT_QUOTES)); ?>
 		<dd>
         </dd>
 		<dt>パスワード</dt>
