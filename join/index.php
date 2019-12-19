@@ -13,12 +13,19 @@ $error['name'] = "blank";
   if($_POST['password'] === ''){
 	$error['password'] = "blank";
  }
- if(empty($error)){
+
+if(empty($error)){
+	 //YmdHis->　日付を取得
+	 $image = date('YmdHis') . $_FILES['image']['name'];
+	 //2018112315168myface.php etc...
+	 move_uploaded_file($_FILES['image']['tmp_name'],'../member_picture/' . $image);
 	 $_SESSION['join'] = $_POST;
+	 $_SESSION['join']['image'] = $image;
 	header('Location:check.php');
 	exit();
  }
 }
+
 if($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])){
 	$_POST = $_SESSION['join'];
 }
