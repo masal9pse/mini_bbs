@@ -13,6 +13,15 @@ $error['name'] = "blank";
   if($_POST['password'] === ''){
 	$error['password'] = "blank";
  }
+//画像ファイルのみを送信できるようにする。
+$_fileName = $_FILES['image']['name'];
+//画像がアップロードされていれば、↓
+if(!empty($_fileName)){
+	$ext = substr($_fileName,-3);
+	if($ext != 'jpg' && $ext != 'gif' && $ext != 'ping'){
+		$error['image'] = 'type';
+	}
+}
 
 if(empty($error)){
 	 //YmdHis->　日付を取得
@@ -79,6 +88,9 @@ if($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])){
 		<dt>写真など</dt>
 		<dd>
         	<input type="file" name="image" size="35" value="test"  />
+			<?php if($error['image'] === 'type'): ?>
+			<p class="error">写真などは「.gif」、「.jpg」、「ping」の画像を指定してください</p>
+			<?php endif; ?>
         </dd>
 	</dl>
 	<div><input type="submit" value="入力内容を確認する" /></div>
