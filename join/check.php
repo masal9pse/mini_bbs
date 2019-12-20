@@ -40,6 +40,10 @@ if(!isset($_SESSION['join'])){
 		</dd>
 		<dt>写真など</dt>
 		<dd>
+		<?php if($_SESSION['join']['image'] !== ""): ?>
+		<!--  member_pictureの階層に入っている画像を画面に出力する-->
+        <img src="../member_picture/<?php print(htmlspecialchars($_SESSION['join']['image'],ENT_QUOTES)); ?>" >
+		<?php endif; ?>
 		</dd>
 	</dl>
 	<div><a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a> | <input type="submit" value="登録する" /></div>
