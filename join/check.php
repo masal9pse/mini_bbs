@@ -3,12 +3,23 @@ session_start();
 require('../dbconnect.php');
 
 if(!isset($_SESSION['join'])){
-  header('Location:index.php');
-  exit();
+header('Location:index.php');
+exit();
+};
+// check.phpの'登録する'のボタンで押してからデータベースに記録するようにしたい
+if(!empty($_POST)){
+$startment = $db->prepare('INSERT INTO members SET name=?, email=?, password=?, picture=?, created=NOW()');
+echo $startment->execute(array(
+	$_SESSION['join']['name'],
+	$_SESSION['join']['email'],
+	$_SESSION['join']['password'],
+	$_SESSION['join']['image'] 
+  ));
+unset($_SESSION['join']);
+  
+header('Location: thanks.php');
+exit();
 }
-
-$startment = $db->prepare('INSERT INTO members SET name=?, email=?, password=?,picture=?, created=NOW()');
-
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -57,4 +68,3 @@ $startment = $db->prepare('INSERT INTO members SET name=?, email=?, password=?,p
 
 </div>
 </body>
-</html>
