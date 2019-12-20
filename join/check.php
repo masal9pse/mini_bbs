@@ -12,7 +12,7 @@ $startment = $db->prepare('INSERT INTO members SET name=?, email=?, password=?, 
 echo $startment->execute(array(
 	$_SESSION['join']['name'],
 	$_SESSION['join']['email'],
-	shal($_SESSION['join']['password']),
+	sha1($_SESSION['join']['password']),
 	$_SESSION['join']['image'] 
   ));
 unset($_SESSION['join']);
