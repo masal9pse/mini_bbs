@@ -1,6 +1,12 @@
 <?php
 session_start();
 require("dbconnect.php");
+
+if ($_COOKIE['email'] !== '') {
+  $email = $_COOKIE['email'];
+}
+
+
 //空でなければ(1以上)判別をする
 if (!empty($_POST)) {
   if (($_POST['email'] !== '' && $_POST['password'] !== '')) {
@@ -15,7 +21,11 @@ if (!empty($_POST)) {
     if ($member) {
       $_SESSION['id'] = $member['id'];
       $_SESSION['time'] = time();
-      //セッション変換にパスワードを入れない
+      if ($_POST['save'] === 'on') {
+        //cookieにメアドを保存
+        setcookie('email', $_POST['email'], time() + 60 * 60 * 24 * 14);
+        //セッション変換にパスワードを入れない
+      }
       header('Location:index.php');
     } else {
       $error['login'] = 'failed';
@@ -51,7 +61,8 @@ if (!empty($_POST)) {
         <dl>
           <dt>メールアドレス</dt>
           <dd>
-            <input type="text" name="email" size="35" maxlength="255" value="<?php print(htmlspecialchars($_POST['email'], ENT_QUOTES)); ?>" />
+            <!-- 上記で定義したものをフロントに表示する -->
+            <input type="text" name="email" size="35" maxlength="255" value="<?php print(htmlspecialchars($email, ENT_QUOTES)); ?>" />
             <?php if ($error['login'] === 'blank') : ?>
               <p class="error">メールアドレスとパスワードをご記入ください</p>
             <?php endif; ?>
@@ -65,6 +76,7 @@ if (!empty($_POST)) {
           </dd>
           <dt>ログイン情報の記録</dt>
           <dd>
+
             <input id="save" type="checkbox" name="save" value="on">
             <label for="save">次回からは自動的にログインする</label>
           </dd>
