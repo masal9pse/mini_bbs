@@ -1,4 +1,5 @@
 <?php
+session_start();
 require("dbconnect.php");
 //空でなければ(1以上)判別をする
 if(!empty($_POST)){
@@ -6,9 +7,17 @@ if(($_POST['email'] !=='' && $_POST['password'] !== '')){
    $login = $db->prepare('SELECT * FROM members WHERE email=? AND password=?');
    $login->execute(array(
      $_POST['email'],
-    //  sha1メソッドで隠蔽しているので、このままだと合わない
-     $_POST['password']
+    //  sha1メソッドで暗号化しているので、このままだと合わない->同じように暗号化してやればいい
+     sha1($_POST['password'])
    ));
+   //dataが返っていればログインしないと成功(↓の処理を実行する)、逆もまた然り
+   $member= $login->fetch();
+   if($member){
+     $_SESSION['id'] = $member['id'];
+     $_SESSION['time'] = time();
+    //セッション変換にパスワードを入れない
+     header('Location:index.php');
+   }
   }
 }
 ?>
