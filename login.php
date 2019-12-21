@@ -1,3 +1,18 @@
+<?php
+require("dbconnect.php");
+//空でなければ(1以上)判別をする
+if(!empty($_POST)){
+if(($_POST['email'] !=='' && $_POST['password'] !== '')){
+   $login = $db->prepare('SELECT * FROM members WHERE email=? AND password=?');
+   $login->execute(array(
+     $_POST['email'],
+    //  sha1メソッドで隠蔽しているので、このままだと合わない
+     $_POST['password']
+   ));
+  }
+}
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -17,6 +32,7 @@
       <p>入会手続きがまだの方はこちらからどうぞ。</p>
       <p>&raquo;<a href="join/">入会手続きをする</a></p>
     </div>
+    <!-- action属性が空なのは同じ画面が再び呼び出される -->
     <form action="" method="post">
       <dl>
         <dt>メールアドレス</dt>
