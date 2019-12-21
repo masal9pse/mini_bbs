@@ -2,6 +2,7 @@
 session_start();
 require("dbconnect.php");
 
+//$emailがクッキーの値で識別されているので、$_POSTの値は考慮されていない
 if ($_COOKIE['email'] !== '') {
   $email = $_COOKIE['email'];
 }
@@ -9,6 +10,8 @@ if ($_COOKIE['email'] !== '') {
 
 //空でなければ(1以上)判別をする
 if (!empty($_POST)) {
+  //↓でcookieのデータを書き変える
+  $email = $_POST['email'];
   if (($_POST['email'] !== '' && $_POST['password'] !== '')) {
     $login = $db->prepare('SELECT * FROM members WHERE email=? AND password=?');
     $login->execute(array(
