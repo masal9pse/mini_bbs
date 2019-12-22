@@ -93,8 +93,13 @@ if (isset($_REQUEST['res'])) {
               <a href="view.php?id=<?php print(htmlspecialchars($post['replay_message_id'], ENT_QUOTES)); ?>">
                 返信元のメッセージ</a>
             <?php endif; ?>
-            [<a href="delete.php?id=" style="color: #F33;">削除</a>]
+            <!-- フロントの削除をクリックすると、メッセージが消える -->
+            <!-- 自分が他のユーザーのメッセージを削除できるのはおかしい -->
+            <!-- 今ログインしている人のIDが、DBにあるmember_idと一致していたら -->
+            <?php if ($_SESSION['id'] == $post['member_id']) : ?>
+              [<a href="delete.php?id=<?php print(htmlspecialchars($post['id'])); ?>" style="color: #F33;">削除</a>]
           </p>
+        <?php endif; ?>
         </div>
       <?php endforeach; ?>
       <ul class="paging">
