@@ -20,7 +20,7 @@ if (!empty($_POST)) {
   // var_dump($_POST['reply_message_id']); // ★
   //↓textareaのname属性,messageに該当
   if ($_POST['message'] !== '') {
-    $message = $db->prepare('INSERT INTO posts SET member_id=?,message=?, reply_message_id=?,  created=NOW()');
+    $message = $db->prepare('INSERT INTO posts SET member_id=?,message=?, replay_message_id=?,  created=NOW()');
     $message->execute(array(
       //$members=DBに保存されたデータ、$members=セッションに保存されたデータ、今回はDBの方の値を使う
       $member['id'],
