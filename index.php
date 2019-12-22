@@ -42,6 +42,12 @@ if ($page == "") {
   $page = 1;
 }
 $page = max($page, 1);
+// 最大件数を取得するにはDBに保存aされているmessageの件数を知る必要がある
+$counts = $db->query('SELECT COUNT(*) AS cnt FROM posts');
+$cnt = $counts->fetch();
+$maxPage = ceil($cnt['cnt'] / 5);
+//最大件数以上のページを指定しても最大件数にしかならない
+$page = min($page, $maxPage);
 
 $start = ($page - 1) * 5;
 
