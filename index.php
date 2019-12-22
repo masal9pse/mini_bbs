@@ -35,8 +35,16 @@ if (!empty($_POST)) {
   }
 }
 
+
+//5の倍数になっている必要がある、２ページ目10件、3ページ目15件目 ...etc
+$page = $_REQUEST['page'];
+$start = ($page - 1) * 5;
+
 //リレーション
-$posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m.id=p.member_id ORDER BY p.created DESC LIMIT 0,5');
+$posts = $db->prepare('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m.id=p.member_id ORDER BY p.created DESC LIMIT ?,5');
+$posts->bindParam(1, $start, PDO::PARAM_INT);
+$posts->execute();
+
 
 //Reがクリックされた時、
 if (isset($_REQUEST['res'])) {
