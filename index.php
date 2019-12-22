@@ -25,6 +25,11 @@ if (!empty($_POST)) {
       $member['id'],
       $_POST['message']
     ));
+
+    //裏側でPOSTの値を持ち続けているため、再描画するとデータが保存され続ける。
+    //対策->もう一度素の状態のindex.phpを呼び出す。
+    header('Location:index.php');
+    exit();
   }
 }
 ?>
