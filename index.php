@@ -70,8 +70,8 @@ $posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m
         </div>
       </form>
       <?php foreach ($posts as $post) : ?>
-        <div class="msg">
-          <img src="member_picture" width="48" height="48" alt="" />
+        <div class="msg">l
+          <img src="member_picture/<?php print(htmlspecialchars($post['picture'], ENT_QUOTES)); ?>" width="48" height="48" alt="<?php print(htmlspecialchars($post['name'], ENT_QUOTES)); ?>" />
           <p><?php print(htmlspecialchars($post['message'], ENT_QUOTES));    ?> <span class="name">（<?php print(htmlspecialchars($post['name'], ENT_QUOTES)); ?>）</span>[<a href="index.php?res=">Re</a>]</p>
           <p class="day"><a href="view.php?id="></a>
             <a href="view.php?id=">
@@ -81,7 +81,7 @@ $posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m
         </div>
       <?php endforeach; ?>
       <ul class="paging">
-        <li><a href="index.php?page=">前のページへ</a></li>
+        <li><a href="index.php?page=">前のページへ</a></i>
         <li><a href="index.php?page=">次のページへ</a></li>
       </ul>
     </div>
