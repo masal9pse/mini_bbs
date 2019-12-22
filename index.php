@@ -38,6 +38,11 @@ if (!empty($_POST)) {
 
 //5の倍数になっている必要がある、２ページ目10件、3ページ目15件目 ...etc
 $page = $_REQUEST['page'];
+if ($page == "") {
+  $page = 1;
+}
+$page = max($page, 1);
+
 $start = ($page - 1) * 5;
 
 //リレーション
