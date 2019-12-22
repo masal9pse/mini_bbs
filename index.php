@@ -36,7 +36,7 @@ if (!empty($_POST)) {
 }
 
 //リレーション
-$posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m.id=p.member_id ORDER BY p.created DESC ');
+$posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m.id=p.member_id ORDER BY p.created DESC LIMIT 0,5');
 
 //Reがクリックされた時、
 if (isset($_REQUEST['res'])) {
@@ -103,8 +103,10 @@ if (isset($_REQUEST['res'])) {
         </div>
       <?php endforeach; ?>
       <ul class="paging">
-        <li><a href="index.php?page=">前のページへ</a></i>
+        <li><a href="index.php?page=">前のページへ</a></li>
+        <li>前のページ</li>
         <li><a href="index.php?page=">次のページへ</a></li>
+        <li>次のページ</li>
       </ul>
     </div>
   </div>
