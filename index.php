@@ -32,6 +32,9 @@ if (!empty($_POST)) {
     exit();
   }
 }
+
+//リレーション
+$posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m.id=p.member_id ORDER BY p.created DESC ');
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -66,17 +69,17 @@ if (!empty($_POST)) {
           </p>
         </div>
       </form>
-
-      <div class="msg">
-        <img src="member_picture" width="48" height="48" alt="" />
-        <p><span class="name">（）</span>[<a href="index.php?res=">Re</a>]</p>
-        <p class="day"><a href="view.php?id="></a>
-          <a href="view.php?id=">
-            返信元のメッセージ</a>
-          [<a href="delete.php?id=" style="color: #F33;">削除</a>]
-        </p>
-      </div>
-
+      <?php foreach ($posts as $post) : ?>
+        <div class="msg">
+          <img src="member_picture" width="48" height="48" alt="" />
+          <p><?php print(htmlspecialchars($post['message'], ENT_QUOTES));    ?> <span class="name">（）</span>[<a href="index.php?res=">Re</a>]</p>
+          <p class="day"><a href="view.php?id="></a>
+            <a href="view.php?id=">
+              返信元のメッセージ</a>
+            [<a href="delete.php?id=" style="color: #F33;">削除</a>]
+          </p>
+        </div>
+      <?php endforeach; ?>
       <ul class="paging">
         <li><a href="index.php?page=">前のページへ</a></li>
         <li><a href="index.php?page=">次のページへ</a></li>
