@@ -15,6 +15,18 @@ if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
   header('Location:login.php');
   exit();
 }
+//投稿するボタンがクリックされた時
+if (!empty($_POST)) {
+  //↓textareaのname属性,messageに該当
+  if ($_POST['message'] !== '') {
+    $message = $db->prepare('INSERT INTO posts SET member_id=?,message=?, created=NOW()');
+    $message->execute(array(
+      //$members=DBに保存されたデータ、$members=セッションに保存されたデータ、今回はDBの方の値を使う
+      $member['id'],
+      $_POST['message']
+    ));
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
