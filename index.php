@@ -122,10 +122,18 @@ if (isset($_REQUEST['res'])) {
         </div>
       <?php endforeach; ?>
       <ul class="paging">
-        <li><a href="index.php?page=">前のページへ</a></li>
-        <li>前のページ</li>
-        <li><a href="index.php?page=">次のページへ</a></li>
-        <li>次のページ</li>
+        <!-- ページが１以上であれば -->
+        <?php if ($page > 1) : ?>
+          <li><a href="index.php?page=<?php print($page - 1); ?>">前のページへ</a></li>
+        <?php else : ?>
+          <li>前のページ</li>
+        <?php endif; ?>
+
+        <?php if ($page < $maxPage) : ?>
+          <li><a href="index.php?page=<?php print($page + 1); ?>">次のページへ</a></li>
+        <?php else : ?>
+          <li>次のページ</li>
+        <?php endif; ?>
       </ul>
     </div>
   </div>
