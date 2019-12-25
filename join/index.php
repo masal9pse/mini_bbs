@@ -21,6 +21,10 @@ if (empty($error)) {
 	header('Location:check.php');
 	exit();
 }
+
+if ($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])) {
+	$_POST = $_REQUEST['join'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
