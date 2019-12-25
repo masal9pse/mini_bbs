@@ -23,7 +23,7 @@ if (empty($error)) {
 }
 
 if ($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])) {
-	$_POST = $_REQUEST['join'];
+	$_POST = $_SESSION['join'];
 }
 ?>
 <!DOCTYPE html>
@@ -58,13 +58,13 @@ if ($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])) {
 					</dd>
 					<dt>メールアドレス<span class="required">必須</span></dt>
 					<dd>
-						<input type="text" name="email" size="35" maxlength="255" value="<?php print(htmlspecialchars($_POST['name'], ENT_QUOTES)); ?>" />
+						<input type="text" name="email" size="35" maxlength="255" value="<?php print(htmlspecialchars($_POST['email'], ENT_QUOTES)); ?>" />
 						<?php if ($error['email'] === "blank") : ?>
 							<p class="error">メールアドレスを入力してください</p>
 						<?php endif; ?>
 					<dt>パスワード<span class="required">必須</span></dt>
 					<dd>
-						<input type="password" name="password" size="10" maxlength="20" value="<?php print(htmlspecialchars($_POST['email'], ENT_QUOTES)); ?>" />
+						<input type="password" name="password" size="10" maxlength="20" value="<?php print(htmlspecialchars($_POST['password'], ENT_QUOTES)); ?>" />
 						<?php if ($error['password'] === "length") : ?>
 							<p class="error">パスワードを４文字以上にしてください</p>
 						<?php endif; ?>
