@@ -1,8 +1,9 @@
 <?php
+session_start();
 //$_POSTか空では無かった時、false
 if (!empty($_POST)) {
 	if ($_POST['name'] === "") {
-		$error['name'] = "blanka";
+		$error['name'] = "blank";
 	}
 }
 if ($_POST['email'] === "") {
@@ -15,7 +16,8 @@ if ($_POST['password'] === "") {
 	$error['password'] = "blank";
 }
 //true
-if (empty($_POST)) {
+if (empty($error)) {
+	$_SESSION['join'] = $_POST;
 	header('Location:check.php');
 	exit();
 }
@@ -46,7 +48,7 @@ if (empty($_POST)) {
 					<dd>
 						<input type="text" name="name" size="35" maxlength="255" value="<?php print(htmlspecialchars($_POST['name'], ENT_QUOTES)); ?>" />
 						<!-- emailが空ならば、注意する -->
-						<?php if ($error['name'] === "blanka") : ?>
+						<?php if ($error['name'] === "blank") : ?>
 							<p class="error">ニックネームを入力してください</p>
 						<?php endif; ?>
 					</dd>
