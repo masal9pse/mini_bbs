@@ -1,9 +1,12 @@
 <?php
 if ($_POST['name'] === "") {
-	$error['name'] = "blank";
+	$error['name'] = "blanka";
 }
 if ($_POST['email'] === "") {
 	$error['email'] = "blank";
+}
+if (strlen($_POST['password'] > 4)) {
+	$error['password'] = "length";
 }
 if ($_POST['password'] === "") {
 	$error['password'] = "blank";
@@ -35,8 +38,8 @@ if ($_POST['password'] === "") {
 					<dd>
 						<input type="text" name="name" size="35" maxlength="255" value="" />
 						<!-- emailが空ならば、注意する -->
-						<?php if ($error['email'] === "blank") : ?>
-							<p class="error">メールアドレスを入力してください</p>
+						<?php if ($error['name'] === "blanka") : ?>
+							<p class="error">ニックネームを入力してください</p>
 						<?php endif; ?>
 					</dd>
 					<dt>メールアドレス<span class="required">必須</span></dt>
