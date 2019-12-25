@@ -1,6 +1,9 @@
 <?php
-if ($_POST['name'] === "") {
-	$error['name'] = "blanka";
+//$_POSTか空では無かった時、false
+if (!empty($_POST)) {
+	if ($_POST['name'] === "") {
+		$error['name'] = "blanka";
+	}
 }
 if ($_POST['email'] === "") {
 	$error['email'] = "blank";
@@ -10,6 +13,11 @@ if (strlen($_POST['password'] < 4)) {
 }
 if ($_POST['password'] === "") {
 	$error['password'] = "blank";
+}
+//true
+if (empty($_POST)) {
+	header('Location:check.php');
+	exit();
 }
 ?>
 <!DOCTYPE html>
@@ -36,7 +44,7 @@ if ($_POST['password'] === "") {
 				<dl>
 					<dt>ニックネーム<span class="required">必須</span></dt>
 					<dd>
-						<input type="text" name="name" size="35" maxlength="255" value="" />
+						<input type="text" name="name" size="35" maxlength="255" value="<?php print(htmlspecialchars($_POST['name'], ENT_QUOTES)); ?>" />
 						<!-- emailが空ならば、注意する -->
 						<?php if ($error['name'] === "blanka") : ?>
 							<p class="error">ニックネームを入力してください</p>
