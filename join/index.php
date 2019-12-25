@@ -1,6 +1,6 @@
 <?php
 session_start();
-//$_POSTか空では無かった時、false
+//$_POSTか空では無かった時、直後の処理
 if (!empty($_POST)) {
 	if ($_POST['name'] === "") {
 		$error['name'] = "blank";
@@ -23,6 +23,7 @@ if (empty($error)) {
 }
 
 if ($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])) {
+	//postはそのページが閉じても保存される
 	$_POST = $_SESSION['join'];
 }
 ?>

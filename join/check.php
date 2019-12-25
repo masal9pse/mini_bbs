@@ -1,9 +1,11 @@
 <?php
 session_start();
-//変数がセットされていなかったら
 if (!isset($_SESSION['join'])) {
+	//キーjoinが登録されていなければ、index.phpに戻る
 	header('Location:index.php');
 	exit();
+} else {
+	//キーjoinが登録されていれば、この{}の処理をする
 }
 ?>
 <!DOCTYPE html>
