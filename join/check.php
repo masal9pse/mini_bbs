@@ -4,8 +4,6 @@ if (!isset($_SESSION['join'])) {
 	//キーjoinが登録されていなければ、index.phpに戻る
 	header('Location:index.php');
 	exit();
-} else {
-	//キーjoinが登録されていれば、この{}の処理をする
 }
 ?>
 <!DOCTYPE html>
@@ -44,6 +42,11 @@ if (!isset($_SESSION['join'])) {
 						【表示されません】
 					</dd>
 					<dt>写真など</dt>
+					<!-- 画像ファイルが空でなければ、 -->
+					<?php if ($_SESSION['join']['image'] !== '') : ?>
+						<!-- member_pictureないの画像をフロントに表示する -->
+						<img src="../member_picture/<?php print(htmlspecialchars($_SESSION['join']['image'], ENT_QUOTES)); ?>">
+					<?php endif; ?>
 					<dd>
 					</dd>
 				</dl>
