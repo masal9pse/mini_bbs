@@ -1,5 +1,7 @@
 <?php
 session_start();
+require('../dbconnect.php');
+
 if (!empty($_POST)) {
 	if ($_POST['name'] === '') {
 		$error['name'] = "blank";
@@ -20,6 +22,14 @@ if (!empty($_POST)) {
 		$ext = substr($_fileName, -3);
 		if ($ext != 'jpg' && $ext != 'gif' && $ext != 'png') {
 			$error['image'] = 'type';
+		}
+	}
+	if (empty($error)) {
+		$member = $db->prepare('SELECT COUNT(*) AS ctn FROM members WHERE email=?');
+		$member->execute(array($_POST['email']));
+		$record = $member->fetch();
+		if ($record['ctn'] > 0) {
+			$error['email'] = "duplicate";
 		}
 	}
 	if (empty($error)) {
@@ -66,6 +76,7 @@ if ($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])) {
 						<?php if ($error['name'] === 'blank') : ?>
 							<p class="error">ニックネームを入力してください</p>
 						<?php endif; ?>
+
 					</dd>
 
 					<dt>メールアドレス<span class="required">必須</span></dt>
@@ -74,7 +85,10 @@ if ($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])) {
 						<?php if ($error['email'] === 'blank') : ?>
 							<p class="error">メールアドレスを入力してください</p>
 						<?php endif; ?>
-
+						<!-- email="duplicateなら -->
+						<?php if ($error['email'] === "duplicate") : ?>
+							<p class="error">指定されたメールアドレスを入力してください</p>
+						<?php endif; ?>
 					<dt>パスワード<span class="required">必須</span></dt>
 					<dd>
 						<input type="password" name="password" size="10" maxlength="20" value="<?php print(htmlspecialchars($_POST['password'], ENT_QUOTES)); ?>">
