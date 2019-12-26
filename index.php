@@ -15,13 +15,12 @@ if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
 }
 //投稿するボタンがクリックされた時
 if (!empty($_POST)) {
-  //↓textareaのname属性,messageに該当
   if ($_POST['message'] !== '') {
-    $message = $db->prepare('INSERT INTO posts SET member_id=?,message=?, created=NOW()');
+    $message = $db->prepare('INSERT INTO posts SET member_id=?,message=?, replay_message_id=?,  created=NOW()');
     $message->execute(array(
-      //$members=DBに保存されたデータ、$members=セッションに保存されたデータ、今回はDBの方の値を使う
       $member['id'],
-      $_POST['message']
+      $_POST['message'],
+      $_POST['reply_post_id']
     ));
     //裏側でPOSTの値を持ち続けているため、再描画するとデータが保存され続ける。
     //対策->もう一度素の状態のindex.phpを呼び出す。
@@ -31,6 +30,14 @@ if (!empty($_POST)) {
 }
 //リレーション
 $posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m.id=p.member_id ORDER BY p.created DESC ');
+
+if (isset($_REQUEST['res'])) {
+  $response = $db->prepare('SELECT m.name,m.picture,p.* FROM members m,posts p WHERE m.id=p.member_id AND p.id=?');
+  $response->execute(array($_REQUEST['res']));
+  $table = $response->fetch();
+  $message = '@' . $table['name'] .  ' ' . $table['message'];
+}
+?>
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -55,8 +62,8 @@ $posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m
         <dl>
           <dt><?php print(htmlspecialchars($member['name'], ENT_QUOTES)); ?>さん、メッセージをどうぞ</dt>
           <dd>
-            <textarea name="message" cols="50" rows="5"></textarea>
-            <input type="hidden" name="reply_post_id" value="" />
+            <textarea name="message" cols="50" rows="5"><?php print(htmlspecialchars($message, ENT_QUOTES)); ?></textarea>
+            <input type="hidden" name="reply_post_id" value="<?php print(htmlspecialchars($_REQUEST['res'], ENT_QUOTES)); ?>" />
           </dd>
         </dl>
         <div>
@@ -68,7 +75,8 @@ $posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m
       <?php foreach ($posts as $post) : ?>
         <div class="msg">
           <img src="member_picture/<?php print(htmlspecialchars($post['picture'], ENT_QUOTES)); ?>" width="48" height="48" alt="<?php print(htmlspecialchars($post['name'], ENT_QUOTES)); ?>" />
-          <p><?php print(htmlspecialchars($post['message'], ENT_QUOTES));    ?> <span class="name">（<?php print(htmlspecialchars($post['name'], ENT_QUOTES)); ?>）</span>[<a href="index.php?res=">Re</a>]</p>
+
+          <p><?php print(htmlspecialchars($post['message'], ENT_QUOTES));    ?> <span class="name">（<?php print(htmlspecialchars($post['name'], ENT_QUOTES)); ?>）</span>[<a href="index.php?res=<?php print(htmlspecialchars($post['id'], ENT_QUOTES)); ?>">Re</a>]</p>
           <p class="day"><a href="view.php?id="></a>
             <a href="view.php?id=">
               返信元のメッセージ</a>
@@ -77,7 +85,7 @@ $posts = $db->query('SELECT m.name,m.picture,p.* FROM members m, posts p WHERE m
         </div>
       <?php endforeach; ?>
       <ul class="paging">
-        <li><a href="index.php?page=">前のページへ</a></i>
+        <li><a href="index.php?page=">前のページへ</a></li>
         <li><a href="index.php?page=">次のページへ</a></li>
       </ul>
     </div>
