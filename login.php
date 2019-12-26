@@ -51,13 +51,12 @@ if (!empty($_POST)) {
           <dt>メールアドレス</dt>
           <dd>
             <input type="text" name="email" size="35" maxlength="255" value="<?php echo htmlspecialchars($_POST['email']); ?>" />
-            <!-- if $error['login] is 'failed -->
-            <!-- フロントの順番 で処理をする-->
-            <?php if ($error['login'] === 'blank') : ?>
+            <!-- フロントの順番 で処理をする->look ReBranch-->
+            <?php if ($error['login'] === 'failed') : ?>
               <p class="error">メールアドレスとパスワードを入力してください</p>
             <?php endif; ?>
             <!-- password isnt hit so hit data -->
-            <?php if ($error['login'] === 'failed') : ?>
+            <?php if ($error['login'] === 'blank') : ?>
               <p class="error">ログインに失敗しました。正しくご記入ください</p>
             <?php endif; ?>
           </dd>
