@@ -3,24 +3,28 @@ session_start();
 require('dbconnect.php');
 //$_POSTが空でなければ
 if (!empty($_POST)) {
-  if (($_POST['email'] !== "" && $_POST['password'] !== "")) {
+  if ($_POST['email'] !== "" && $_POST['password'] !== "") {
+    //'blankの処理がはしる↑
     $login = $db->prepare('SELECT * FROM members WHERE email=? AND password=? ');
     $login->execute(array(
+      //ここで'failed'エラーがはしる
       $_POST['email'],
       sha1($_POST['password'])
     ));
-    //$login is save $member
     $member = $login->fetch();
-    //if $member is $login['id'],time to $_SESSION
+
     if ($member) {
       $_SESSION['id'] = $member['id'];
       $_SESSION['time'] = time();
+      header('Location:index.php');
+      exit();
+    } else {
+      $error['login'] = "failed";
     }
-    //to header index.php
-    header('Location:index.php');
+  } else {
+    $error['login'] = "blank";
   }
 }
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -47,6 +51,15 @@ if (!empty($_POST)) {
           <dt>メールアドレス</dt>
           <dd>
             <input type="text" name="email" size="35" maxlength="255" value="<?php echo htmlspecialchars($_POST['email']); ?>" />
+            <!-- if $error['login] is 'failed -->
+            <!-- フロントの順番 で処理をする-->
+            <?php if ($error['login'] === 'blank') : ?>
+              <p class="error">メールアドレスとパスワードを入力してください</p>
+            <?php endif; ?>
+            <!-- password isnt hit so hit data -->
+            <?php if ($error['login'] === 'failed') : ?>
+              <p class="error">ログインに失敗しました。正しくご記入ください</p>
+            <?php endif; ?>
           </dd>
           <dt>パスワード</dt>
           <dd>
