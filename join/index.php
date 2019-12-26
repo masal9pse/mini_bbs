@@ -1,45 +1,43 @@
 <?php
 session_start();
-//$_POSTか空では無かった時、直後の処理
 if (!empty($_POST)) {
-	if ($_POST['name'] === "") {
+	if ($_POST['name'] === '') {
 		$error['name'] = "blank";
 	}
-}
-if ($_POST['email'] === "") {
-	$error['email'] = "blank";
-}
-if (strlen($_POST['password'] < 4)) {
-	$error['password'] = "length";
-}
-if ($_POST['password'] === "") {
-	$error['password'] = "blank";
-}
-$_fileName = $_FILES['image']['name'];
-if (!empty($_fileName)) {
-	//文字を取り出す、これをAとする
-	$ext = substr($_fileName, -3);
-	// 画像ファイル以外をAに保存
-	if ($ext != 'png' && $ext != 'gif' && $ext != 'jpg') {
-		$error['image'] = 'type';
+	if ($_POST['email'] === '') {
+		$error['email'] = "blank";
+	}
+	if (strlen($_POST['password']) < 4) {
+		$error['password'] = "length";
+	}
+	if ($_POST['password'] === '') {
+		$error['password'] = "blank";
+	}
+	//画像ファイルのみを送信できるようにする。
+	$_fileName = $_FILES['image']['name'];
+	//画像がアップロードされていれば、↓
+	if (!empty($_fileName)) {
+		$ext = substr($_fileName, -3);
+		if ($ext != 'jpg' && $ext != 'gif' && $ext != 'png') {
+			$error['image'] = 'type';
+		}
+	}
+	if (empty($error)) {
+		//YmdHis->　日付を取得
+		$image = date('YmdHis') . $_FILES['image']['name'];
+		//2018112315168myface.php etc...
+		move_uploaded_file($_FILES['image']['tmp_name'], '../member_picture/' . $image);
+		$_SESSION['join'] = $_POST;
+		$_SESSION['join']['image'] = $image;
+		header('Location:check.php');
+		exit();
 	}
 }
-
-if (empty($error)) {
-	$image = date('YmdHis') . $_FILES['image']['name'];
-	//image upload(該当ファイル、保存場所、名前);
-	move_uploaded_file($_FILES['image']['tmp_name'], '../member_picture/' . $image);
-	$_SESSION['join'] = $_POST;
-	$_SESSION['join']['image'] = $image;
-	header('Location:check.php');
-	exit();
-}
-
 if ($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])) {
-	//postはそのページが閉じても保存される
 	$_POST = $_SESSION['join'];
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -65,37 +63,39 @@ if ($_REQUEST['action'] == "rewrite" && isset($_SESSION['join'])) {
 					<dt>ニックネーム<span class="required">必須</span></dt>
 					<dd>
 						<input type="text" name="name" size="35" maxlength="255" value="<?php print(htmlspecialchars($_POST['name'], ENT_QUOTES)); ?>" />
-						<!-- emailが空ならば、注意する -->
-						<?php if ($error['name'] === "blank") : ?>
+						<?php if ($error['name'] === 'blank') : ?>
 							<p class="error">ニックネームを入力してください</p>
 						<?php endif; ?>
 					</dd>
+
 					<dt>メールアドレス<span class="required">必須</span></dt>
 					<dd>
 						<input type="text" name="email" size="35" maxlength="255" value="<?php print(htmlspecialchars($_POST['email'], ENT_QUOTES)); ?>" />
-						<?php if ($error['email'] === "blank") : ?>
+						<?php if ($error['email'] === 'blank') : ?>
 							<p class="error">メールアドレスを入力してください</p>
 						<?php endif; ?>
+
 					<dt>パスワード<span class="required">必須</span></dt>
 					<dd>
-						<input type="password" name="password" size="10" maxlength="20" value="<?php print(htmlspecialchars($_POST['password'], ENT_QUOTES)); ?>" />
-						<?php if ($error['password'] === "length") : ?>
-							<p class="error">パスワードを４文字以上にしてください</p>
+						<input type="password" name="password" size="10" maxlength="20" value="<?php print(htmlspecialchars($_POST['password'], ENT_QUOTES)); ?>">
+						<?php if ($error['password'] === 'length') : ?>
+							<p class="error">パスワードは４文字以上で入力してください。</p>
 						<?php endif; ?>
-						<?php if ($error['password'] === "blank") : ?>
+						<?php if ($error['password'] === 'blank') : ?>
 							<p class="error">パスワードを入力してください</p>
 						<?php endif; ?>
 					</dd>
 					<dt>写真など</dt>
 					<dd>
-						<input type="file" name="image" size="35" value="test" />
+						<input type="file" name="image" size="10" value="test" />
 						<?php if ($error['image'] === 'type') : ?>
-							<p class="error">写真などは「.gif」、「.jpg」、「.ping」の画像を指定してください</p>
+							<p class="error">写真などは「.gif」、「.jpg」、「png」の画像を指定してください</p>
 						<?php endif; ?>
+						<!-- 上記の３つの１つでも入力していなければ、↓-->
 						<?php if (!empty($error)) : ?>
-							<p class="error">恐れ入りますが、改めて画像を指定してください</p>
+							<p class="error">恐れ入りますが、改めて画像を指定してください。</p>
 						<?php endif; ?>
-					</dd>
+						　　　　　</dd>
 				</dl>
 				<div><input type="submit" value="入力内容を確認する" /></div>
 			</form>

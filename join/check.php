@@ -1,25 +1,22 @@
 <?php
 session_start();
 require('../dbconnect.php');
-
 if (!isset($_SESSION['join'])) {
-	//キーjoinが登録されていなければ、index.phpに戻る
 	header('Location:index.php');
 	exit();
-}
-//$_POSTが空では無かったら＝値が入っていれば
+};
+// check.phpの'登録する'のボタンで押してからデータベースに記録するようにしたい
 if (!empty($_POST)) {
-
-	$startment = $db->prepare('INSERT INTO members2 SET name=?,email=?,password=? ,picture=?, created=NOW()');
+	$startment = $db->prepare('INSERT INTO members SET name=?, email=?, password=?, picture=?, created=NOW()');
 	echo $startment->execute(array(
 		$_SESSION['join']['name'],
 		$_SESSION['join']['email'],
 		sha1($_SESSION['join']['password']),
-		$_SESSION['join']['image'],
+		$_SESSION['join']['image']
 	));
-	// unset関数は、定義した変数の割当を削除する関数です。
 	unset($_SESSION['join']);
-	header('Location:thanks.php');
+
+	header('Location: thanks.php');
 	exit();
 }
 ?>
@@ -59,12 +56,11 @@ if (!empty($_POST)) {
 						【表示されません】
 					</dd>
 					<dt>写真など</dt>
-					<!-- 画像ファイルが空でなければ、 -->
-					<?php if ($_SESSION['join']['image'] !== '') : ?>
-						<!-- member_pictureないの画像をフロントに表示する -->
-						<img src="../member_picture/<?php print(htmlspecialchars($_SESSION['join']['image'], ENT_QUOTES)); ?>">
-					<?php endif; ?>
 					<dd>
+						<?php if ($_SESSION['join']['image'] !== "") : ?>
+							<!--  member_pictureの階層に入っている画像を画面に出力する-->
+							<img src="../member_picture/<?php print(htmlspecialchars($_SESSION['join']['image'], ENT_QUOTES)); ?>">
+						<?php endif; ?>
 					</dd>
 				</dl>
 				<div><a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a> | <input type="submit" value="登録する" /></div>
@@ -73,5 +69,3 @@ if (!empty($_POST)) {
 
 	</div>
 </body>
-
-</html>
