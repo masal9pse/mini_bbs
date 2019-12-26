@@ -1,8 +1,25 @@
 <?php
 session_start();
+require('../dbconnect.php');
+
 if (!isset($_SESSION['join'])) {
 	//キーjoinが登録されていなければ、index.phpに戻る
 	header('Location:index.php');
+	exit();
+}
+//$_POSTが空では無かったら＝値が入っていれば
+if (!empty($_POST)) {
+
+	$startment = $db->prepare('INSERT INTO members2 SET name=?,email=?,password=? ,picture=?, created=NOW()');
+	echo $startment->execute(array(
+		$_SESSION['join']['name'],
+		$_SESSION['join']['email'],
+		sha1($_SESSION['join']['password']),
+		$_SESSION['join']['image'],
+	));
+	// unset関数は、定義した変数の割当を削除する関数です。
+	unset($_SESSION['join']);
+	header('Location:thanks.php');
 	exit();
 }
 ?>
